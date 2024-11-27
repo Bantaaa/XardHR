@@ -1,0 +1,20 @@
+server:
+  port: 8080  # Needed to specify which port your app runs on
+
+spring:
+  datasource:  # Required database connection details
+    url: jdbc:postgresql://localhost:5432/xardhr
+    username: postgres
+    password: postgres
+
+  jpa:  # Basic JPA settings needed for database operations
+    hibernate:
+      ddl-auto: none  # We use 'none' because we're using Liquibase
+    show-sql: true    # Helpful for development to see SQL queries
+
+  liquibase:  # Required for Liquibase to work
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+jwt:
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  expiration: 86400000
