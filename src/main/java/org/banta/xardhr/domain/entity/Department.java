@@ -1,8 +1,12 @@
 package org.banta.xardhr.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class Department {
     @Id
     @GeneratedValue
