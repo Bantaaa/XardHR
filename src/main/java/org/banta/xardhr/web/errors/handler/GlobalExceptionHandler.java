@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.Builder;
 import lombok.Data;
 import org.banta.xardhr.web.errors.exception.BadRequestException;
+import org.banta.xardhr.web.errors.exception.JwtException;
 import org.banta.xardhr.web.errors.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,18 @@ public class GlobalExceptionHandler {
         private LocalDateTime timestamp;
         private String message;
     }
+
+    @ExceptionHandler(JwtException.class)
+    protected ResponseEntity<ErrorResponse> handleJwtException(JwtException ex) {
+        return buildResponseEntity(
+                ErrorResponse.builder()
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .message(ex.getMessage())
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
 
     @ExceptionHandler(ResourceNotFoundException.class)
     protected ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
@@ -50,7 +63,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        String message = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+        String message = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+                .reduce((m1, m2) -> m1 + "; " + m2)
+                .orElse("Validation failed");
         return buildResponseEntity(
                 ErrorResponse.builder()
                         .status(HttpStatus.BAD_REQUEST)
@@ -59,6 +77,7 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+
 
     @ExceptionHandler(ConstraintViolationException.class)
     protected ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
