@@ -4,8 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 public class BankAccount {
@@ -13,7 +11,7 @@ public class BankAccount {
     @GeneratedValue
     private Long id;
     @OneToOne
-    private User user;
+    private AppUser appUser;
     private String accountNumber;
     private String bankName;
     private String branchCode;

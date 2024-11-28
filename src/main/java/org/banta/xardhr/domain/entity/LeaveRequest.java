@@ -16,7 +16,7 @@ public class LeaveRequest {
     @GeneratedValue
     private Long id;
     @ManyToOne
-    private User user;
+    private AppUser appUser;
     private LocalDate startDate;
     private LocalDate endDate;
     @Enumerated(EnumType.STRING)

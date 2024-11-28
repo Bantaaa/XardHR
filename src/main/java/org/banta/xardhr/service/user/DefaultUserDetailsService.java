@@ -1,7 +1,7 @@
 package org.banta.xardhr.service.user;
 
 import lombok.RequiredArgsConstructor;
-import org.banta.xardhr.domain.entity.User;
+import org.banta.xardhr.domain.entity.AppUser;
 import org.banta.xardhr.repository.UserRepository;
 import org.banta.xardhr.web.errors.exception.ResourceNotFoundException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,13 +19,13 @@ public class DefaultUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        AppUser appUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
+                appUser.getUsername(),
+                appUser.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + appUser.getRole().name()))
         );
     }
 }

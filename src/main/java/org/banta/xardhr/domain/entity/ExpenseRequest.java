@@ -16,7 +16,7 @@ public class ExpenseRequest {
     @GeneratedValue
     private Long id;
     @ManyToOne
-    private User user;
+    private AppUser appUser;
     private Double amount;
     private String description;
     @Enumerated(EnumType.STRING)

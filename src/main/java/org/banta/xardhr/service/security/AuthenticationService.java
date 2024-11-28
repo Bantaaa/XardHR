@@ -1,8 +1,7 @@
 package org.banta.xardhr.service.security;
 
 import lombok.RequiredArgsConstructor;
-import org.banta.xardhr.domain.entity.User;
-import org.banta.xardhr.domain.enums.EmployeeStatus;
+import org.banta.xardhr.domain.entity.AppUser;
 import org.banta.xardhr.domain.enums.UserRole;
 import org.banta.xardhr.dto.request.RegisterRequest;
 import org.banta.xardhr.repository.UserRepository;
@@ -13,9 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -36,22 +32,22 @@ public class AuthenticationService {
             throw new BadRequestException("Username already exists");
         }
 
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(UserRole.EMPLOYEE);
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setContactNumber(request.getContactNumber());
-        user.setPosition(request.getPosition());
+        AppUser appUser = new AppUser();
+        appUser.setUsername(request.getUsername());
+        appUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        appUser.setRole(UserRole.EMPLOYEE);
+        appUser.setFirstName(request.getFirstName());
+        appUser.setLastName(request.getLastName());
+        appUser.setContactNumber(request.getContactNumber());
+        appUser.setPosition(request.getPosition());
 
-        User savedUser = userRepository.save(user);
-        String token = jwtService.generateToken(savedUser);
+        AppUser savedAppUser = userRepository.save(appUser);
+        String token = jwtService.generateToken(savedAppUser);
 
         return AuthResponse.builder()
                 .token(token)
-                .username(savedUser.getUsername())
-                .role(savedUser.getRole())
+                .username(savedAppUser.getUsername())
+                .role(savedAppUser.getRole())
                 .build();
     }
 
@@ -63,15 +59,15 @@ public class AuthenticationService {
                 )
         );
 
-        User user = userRepository.findByUsername(request.getUsername())
+        AppUser appUser = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new BadRequestException("Invalid credentials"));
 
-        String token = jwtService.generateToken(user);
+        String token = jwtService.generateToken(appUser);
 
         return AuthResponse.builder()
                 .token(token)
-                .username(user.getUsername())
-                .role(user.getRole())
+                .username(appUser.getUsername())
+                .role(appUser.getRole())
                 .build();
     }
     // password validation during user creation/password change
