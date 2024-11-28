@@ -15,7 +15,7 @@ public class Attendance {
     @GeneratedValue
     private Long id;
     @ManyToOne
-    private Employee employee;
+    private User employee;
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;
     @Enumerated(EnumType.STRING)

@@ -15,7 +15,7 @@ public class Payslip {
     @GeneratedValue
     private Long id;
     @ManyToOne
-    private Employee employee;
+    private User user;
     private LocalDate periodStart;
     private LocalDate periodEnd;
     private Double allowances;

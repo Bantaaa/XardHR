@@ -13,7 +13,7 @@ public class Department {
     private Long id;
     private String name;
     @OneToOne
-    private Employee departmentHead;
+    private User departmentHead;
     private String description;
     @ManyToOne
     private Department parentDepartment;

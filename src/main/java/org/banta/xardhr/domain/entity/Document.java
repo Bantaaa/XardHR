@@ -15,7 +15,7 @@ public class Document {
     @GeneratedValue
     private Long id;
     @ManyToOne
-    private Employee employee;
+    private User user;
     private String title;
     @Enumerated(EnumType.STRING)
     private DocumentType type;

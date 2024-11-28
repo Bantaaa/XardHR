@@ -8,14 +8,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 public class BankAccount {
     @Id
     @GeneratedValue
     private Long id;
     @OneToOne
-    private Employee employee;
+    private User user;
     private String accountNumber;
     private String bankName;
     private String branchCode;
