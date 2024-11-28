@@ -1,12 +1,13 @@
 package org.banta.xardhr.service.expense.impl;
 
-import org.banta.xardhr.domain.entity.ExpenseRequest;
 import org.banta.xardhr.domain.enums.RequestStatus;
 import org.banta.xardhr.dto.request.ExpenseRequestDto;
 import org.banta.xardhr.service.expense.ExpenseService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class DefaultExpenseService implements ExpenseService {
 
     @Override

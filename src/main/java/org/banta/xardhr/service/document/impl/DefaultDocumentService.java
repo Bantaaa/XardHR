@@ -2,9 +2,11 @@ package org.banta.xardhr.service.document.impl;
 
 import org.banta.xardhr.dto.request.DocumentDto;
 import org.banta.xardhr.service.document.DocumentService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class DefaultDocumentService implements DocumentService {
 
     @Override

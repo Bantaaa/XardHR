@@ -27,9 +27,9 @@ public class PayrollController {
         return ResponseEntity.ok(payrollService.approvePayslip(id));
     }
 
-//    @GetMapping("/employee/{userId}")
-//    @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN') or @securityService.isCurrentUser(#userId)")
-//    public ResponseEntity<List<PayslipDto>> getUserPayslips(@PathVariable Long userId) {
-//        return ResponseEntity.ok(payrollService.getUserPayslips(userId));
-//    }
+    @GetMapping("/employee/{userId}")
+    @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN') or @securityService.isCurrentUser(#userId)")
+    public ResponseEntity<List<PayslipDto>> getUserPayslips(@PathVariable Long userId) {
+        return ResponseEntity.ok(payrollService.getUserPayslips(userId));
+    }
 }

@@ -3,9 +3,11 @@ package org.banta.xardhr.service.payroll.impl;
 import org.banta.xardhr.domain.entity.Payslip;
 import org.banta.xardhr.dto.request.PayslipDto;
 import org.banta.xardhr.service.payroll.PayrollService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class DefaultPayrollService implements PayrollService {
 
     @Override

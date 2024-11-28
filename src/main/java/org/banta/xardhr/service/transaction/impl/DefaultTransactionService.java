@@ -1,11 +1,12 @@
 package org.banta.xardhr.service.transaction.impl;
 
-import org.banta.xardhr.domain.entity.Transaction;
 import org.banta.xardhr.dto.request.TransactionDto;
 import org.banta.xardhr.service.transaction.TransactionService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class DefaultTransactionService implements TransactionService {
 
     @Override

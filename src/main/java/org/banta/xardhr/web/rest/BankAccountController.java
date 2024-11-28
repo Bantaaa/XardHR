@@ -21,12 +21,12 @@ public class BankAccountController {
         return ResponseEntity.ok(bankService.addBankAccount(userId, account));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{userId}")
     @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN') or @securityService.isCurrentUser(#userId)")
     public ResponseEntity<BankAccountDto> updateBankAccount(
-            @PathVariable Long id,
+            @PathVariable Long userId,
             @RequestBody BankAccountDto account) {
-        return ResponseEntity.ok(bankService.updateBankAccount(id, account));
+        return ResponseEntity.ok(bankService.updateBankAccount(userId, account));
     }
 
     @DeleteMapping("/{id}")

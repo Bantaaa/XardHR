@@ -2,7 +2,9 @@ package org.banta.xardhr.service.bank.impl;
 
 import org.banta.xardhr.dto.request.BankAccountDto;
 import org.banta.xardhr.service.bank.BankService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DefaultBankService implements BankService {
 
     @Override

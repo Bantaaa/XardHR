@@ -5,7 +5,9 @@ import org.banta.xardhr.dto.response.AppUserDto;
 import org.banta.xardhr.service.user.AppUserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DefaultAppUserService implements AppUserService {
 
     @Override
