@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.banta.xardhr.service.security.JwtService;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,11 +47,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             userDetails.getAuthorities()
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    SecurityContextHolder.getContext().setAuthentication(authToken); // Showing security badge
                 }
             }
         } catch (Exception e) {
-            // Token validation failed - don't set authentication
+            // Token validation failed - no authentication needed
         }
 
         filterChain.doFilter(request, response);
