@@ -1,8 +1,6 @@
 package org.banta.xardhr.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.banta.xardhr.domain.enums.EmployeeStatus;
@@ -19,15 +17,13 @@ import java.util.Collections;
 import java.util.UUID;
 
 @Entity
-@Builder
 @Getter
 @Setter
 @Table(name = "\"user\"")
-@AllArgsConstructor
 public class AppUser implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -61,9 +57,6 @@ public class AppUser implements UserDetails {
     private Double baseSalary;
     private String position;
     private String contactNumber;
-
-    public AppUser() {
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
