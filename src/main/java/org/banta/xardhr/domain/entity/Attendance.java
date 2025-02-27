@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.banta.xardhr.domain.enums.AttendanceStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,12 +15,18 @@ public class Attendance {
     @Id
     @GeneratedValue
     private Long id;
+
     @ManyToOne
     private AppUser employee;
+
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;
+
     @Enumerated(EnumType.STRING)
     private AttendanceStatus status;
+
     private String notes;
     private String location;
+
+    private LocalDate date;
 }

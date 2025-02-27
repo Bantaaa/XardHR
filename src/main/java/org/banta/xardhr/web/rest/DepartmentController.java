@@ -16,8 +16,9 @@ public class DepartmentController {
     private final DepartmentService departmentService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN', 'DEPT_HEAD')")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DEPT_HEAD', 'HR_MANAGER', 'ADMIN')")
     public ResponseEntity<List<DepartmentDto>> getAllDepartments() {
+        // Make sure DTO has all the fields the frontend needs
         return ResponseEntity.ok(departmentService.getAllDepartments());
     }
 

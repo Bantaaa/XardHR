@@ -10,4 +10,13 @@ public class AuthResponse {
     private String token;
     private String username;
     private UserRole role;
+
+    private String id;
+    private String firstName;
+    private String lastName;
+    private String employeeId;
+    private String position;
+    private String contactNumber;
+    private String status;
+    private String departmentId;
 }

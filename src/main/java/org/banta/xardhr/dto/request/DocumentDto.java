@@ -7,10 +7,14 @@ import java.time.LocalDate;
 
 @Data
 public class DocumentDto {
+    private String id;
     private String title;
     private DocumentType type;
-    private String fileUrl;
+    private String employeeId;
+    private String employeeName;
     private LocalDate uploadDate;
-    private LocalDate expiryDate;
+    private String fileUrl;
+    private String fileSize;
     private Boolean isVerified;
+    private LocalDate expiryDate;
 }
