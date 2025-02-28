@@ -48,6 +48,13 @@ public class DefaultAppUserService implements AppUserService {
         user.setEmployeeId(UUID.randomUUID());
         user.setIsActive(true);
 
+        // Handle department if specified
+        if (request.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(request.getDepartmentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+            user.setDepartment(department);
+        }
+
         AppUser savedUser = userRepository.save(user);
         return convertToDto(savedUser);
     }
@@ -62,6 +69,23 @@ public class DefaultAppUserService implements AppUserService {
         user.setLastName(request.getLastName());
         user.setContactNumber(request.getContactNumber());
         user.setPosition(request.getPosition());
+
+        // Update email/username if provided
+        if (request.getUsername() != null && !request.getUsername().isEmpty()
+                && !request.getUsername().equals(user.getUsername())) {
+            // Check if new username is available
+            if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+                throw new BadRequestException("Username/email already exists");
+            }
+            user.setUsername(request.getUsername());
+        }
+
+        // Update department if provided
+        if (request.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(request.getDepartmentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+            user.setDepartment(department);
+        }
 
         // Update password if provided
         if (request.getPassword() != null && !request.getPassword().isEmpty()) {
@@ -98,6 +122,7 @@ public class DefaultAppUserService implements AppUserService {
 
     private AppUserDto convertToDto(AppUser user) {
         AppUserDto dto = new AppUserDto();
+        dto.setId(user.getId()); // Add ID for frontend
         dto.setUsername(user.getUsername());
         dto.setRole(user.getRole());
         dto.setFirstName(user.getFirstName());
@@ -109,9 +134,11 @@ public class DefaultAppUserService implements AppUserService {
         dto.setBaseSalary(user.getBaseSalary());
         dto.setPosition(user.getPosition());
         dto.setContactNumber(user.getContactNumber());
+        dto.setEmail(user.getUsername()); // Set email same as username for frontend
 
         if (user.getDepartment() != null) {
             dto.setDepartmentId(user.getDepartment().getId());
+            dto.setDepartment(user.getDepartment().getName()); // Include department name
         }
 
         return dto;

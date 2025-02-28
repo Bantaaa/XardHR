@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1740725873767-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_attendance
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: employee_id
+                  type: BIGINT
+              - column:
+                  name: check_in
+                  type: DATETIME
+              - column:
+                  name: check_out
+                  type: DATETIME
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  name: notes
+                  type: VARCHAR(255)
+              - column:
+                  name: location
+                  type: VARCHAR(255)
+              - column:
+                  name: date
+                  type: DATE
+            tableName: attendance
+  - changeSet:
+      id: 1740725873767-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: employee_id
+            baseTableName: attendance
+            constraintName: FK_ATTENDANCE_ON_EMPLOYEE
+            referencedColumnNames: id
+            referencedTableName: user
+

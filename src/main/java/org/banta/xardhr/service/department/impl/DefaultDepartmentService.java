@@ -9,6 +9,7 @@ import org.banta.xardhr.repository.UserRepository;
 import org.banta.xardhr.service.department.DepartmentService;
 import org.banta.xardhr.web.errors.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ public class DefaultDepartmentService implements DepartmentService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public DepartmentDto createDepartment(DepartmentDto departmentDto) {
         Department department = new Department();
         department.setName(departmentDto.getName());
@@ -45,6 +47,7 @@ public class DefaultDepartmentService implements DepartmentService {
     }
 
     @Override
+    @Transactional
     public DepartmentDto updateDepartment(Long id, DepartmentDto departmentDto) {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found with ID: " + id));
@@ -53,17 +56,35 @@ public class DefaultDepartmentService implements DepartmentService {
         department.setDescription(departmentDto.getDescription());
 
         // Update department head if specified
-        if (departmentDto.getHeadId() != null) {
-            AppUser head = userRepository.findById(Long.valueOf(departmentDto.getHeadId()))
-                    .orElseThrow(() -> new ResourceNotFoundException("Department head not found"));
-            department.setDepartmentHead(head);
+        if (departmentDto.getHeadId() != null && !departmentDto.getHeadId().isEmpty()) {
+            try {
+                Long headId = Long.valueOf(departmentDto.getHeadId());
+                AppUser head = userRepository.findById(headId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Department head not found"));
+                department.setDepartmentHead(head);
+            } catch (NumberFormatException e) {
+                throw new ResourceNotFoundException("Invalid department head ID format");
+            }
+        } else {
+            department.setDepartmentHead(null);
         }
 
         // Update parent department if specified
-        if (departmentDto.getParentId() != null) {
-            Department parent = departmentRepository.findById(Long.valueOf(departmentDto.getParentId()))
-                    .orElseThrow(() -> new ResourceNotFoundException("Parent department not found"));
-            department.setParentDepartment(parent);
+        if (departmentDto.getParentId() != null && !departmentDto.getParentId().isEmpty()) {
+            try {
+                Long parentId = Long.valueOf(departmentDto.getParentId());
+
+                // Prevent circular reference - department can't be its own parent
+                if (parentId.equals(id)) {
+                    throw new ResourceNotFoundException("Department cannot be its own parent");
+                }
+
+                Department parent = departmentRepository.findById(parentId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Parent department not found"));
+                department.setParentDepartment(parent);
+            } catch (NumberFormatException e) {
+                throw new ResourceNotFoundException("Invalid parent department ID format");
+            }
         } else {
             department.setParentDepartment(null);
         }
