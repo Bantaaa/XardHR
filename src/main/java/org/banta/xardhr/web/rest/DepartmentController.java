@@ -42,4 +42,10 @@ public class DepartmentController {
         departmentService.deleteDepartment(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DEPT_HEAD', 'HR_MANAGER', 'ADMIN')")
+    public ResponseEntity<DepartmentDto> getDepartment(@PathVariable Long id) {
+        return ResponseEntity.ok(departmentService.getDepartment(id));
+    }
 }

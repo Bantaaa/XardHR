@@ -11,12 +11,11 @@ public class ExpenseRequestDto {
     private String id;
     private String employeeId;
     private String employeeName;
-    private ExpenseType type;
+    private String type; // Change from enum to String
     private Double amount;
     private String description;
-    private RequestStatus status;
-    private String submittedDate;
-    private String approvedDate;
-
-    private LocalDate submitDate;
+    private String status; // Change from enum to String
+    private String submittedDate; // IMPORTANT: Rename to match frontend expectations
+    // Remove submitDate field or make it transient to avoid conflicts
+    private String approvedDate; // Add this field for frontend compatibility
 }

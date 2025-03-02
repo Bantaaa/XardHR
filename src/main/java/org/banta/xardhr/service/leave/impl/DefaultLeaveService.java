@@ -3,6 +3,7 @@ package org.banta.xardhr.service.leave.impl;
 import lombok.RequiredArgsConstructor;
 import org.banta.xardhr.domain.entity.AppUser;
 import org.banta.xardhr.domain.entity.LeaveRequest;
+import org.banta.xardhr.domain.enums.LeaveType;
 import org.banta.xardhr.domain.enums.RequestStatus;
 import org.banta.xardhr.dto.request.LeaveRequestDto;
 import org.banta.xardhr.repository.LeaveRequestRepository;
@@ -31,32 +32,39 @@ public class DefaultLeaveService implements LeaveService {
         AppUser user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
 
+        // Parse string dates to LocalDate for validation
+        LocalDate startDate = LocalDate.parse(request.getStartDate());
+        LocalDate endDate = LocalDate.parse(request.getEndDate());
+
         // Validate request dates
-        if (request.getStartDate().isBefore(LocalDate.now())) {
+        if (startDate.isBefore(LocalDate.now())) {
             throw new BadRequestException("Start date cannot be in the past");
         }
 
-        if (request.getEndDate().isBefore(request.getStartDate())) {
+        if (endDate.isBefore(startDate)) {
             throw new BadRequestException("End date must be after start date");
         }
 
         // Calculate total days
-        int totalDays = calculateDays(request.getStartDate(), request.getEndDate());
+        int totalDays = calculateDays(startDate, endDate);
 
         // Create leave request
         LeaveRequest leaveRequest = new LeaveRequest();
         leaveRequest.setAppUser(user);
-        leaveRequest.setStartDate(request.getStartDate());
-        leaveRequest.setEndDate(request.getEndDate());
-        leaveRequest.setType(request.getType());
+        leaveRequest.setStartDate(startDate);
+        leaveRequest.setEndDate(endDate);
+        leaveRequest.setType(LeaveType.valueOf(request.getType())); // Parse string to enum
         leaveRequest.setReason(request.getReason());
         leaveRequest.setStatus(RequestStatus.PENDING);
 
         LeaveRequest saved = leaveRequestRepository.save(leaveRequest);
 
-        // Convert to DTO with additional fields for frontend
-        return enhanceLeaveRequestDto(convertToDto(saved), totalDays);
+        // Convert to DTO
+        LeaveRequestDto resultDto = convertToDto(saved);
+        resultDto.setTotalDays(totalDays);
+        return resultDto;
     }
+
 
     @Override
     public LeaveRequestDto updateRequest(Long id, RequestStatus status) {
@@ -104,30 +112,27 @@ public class DefaultLeaveService implements LeaveService {
         return Period.between(startDate, endDate).getDays() + 1; // +1 to include both start and end dates
     }
 
-    // Convert entity to basic DTO
     private LeaveRequestDto convertToDto(LeaveRequest leaveRequest) {
         LeaveRequestDto dto = new LeaveRequestDto();
         dto.setId(leaveRequest.getId().toString());
-        dto.setStartDate(leaveRequest.getStartDate());
-        dto.setEndDate(leaveRequest.getEndDate());
-        dto.setType(leaveRequest.getType());
+        dto.setStartDate(leaveRequest.getStartDate().toString());
+        dto.setEndDate(leaveRequest.getEndDate().toString());
+        dto.setType(leaveRequest.getType().toString());
         dto.setReason(leaveRequest.getReason());
-        dto.setStatus(leaveRequest.getStatus());
+        dto.setStatus(leaveRequest.getStatus().toString());
 
         AppUser user = leaveRequest.getAppUser();
         dto.setEmployeeId(user.getEmployeeId().toString());
         dto.setEmployeeName(user.getFirstName() + " " + user.getLastName());
 
+        // Set applied date
+        dto.setAppliedOn(LocalDate.now().format(dateFormatter));
+
         return dto;
     }
 
-    // Enhance DTO with additional fields needed by frontend
     private LeaveRequestDto enhanceLeaveRequestDto(LeaveRequestDto dto, int totalDays) {
         dto.setTotalDays(totalDays);
-
-        // Format the applied date to match frontend expectations
-        dto.setAppliedOn(LocalDate.now().format(dateFormatter));
-
         return dto;
     }
 }

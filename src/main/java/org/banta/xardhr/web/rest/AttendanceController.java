@@ -35,7 +35,7 @@ public class AttendanceController {
     }
 
     @GetMapping("/today")
-    @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN', 'EMPLOYEE', 'DEPT_HEAD')")
     public ResponseEntity<List<AttendanceDto>> getTodayAttendance() {
         if (attendanceService instanceof DefaultAttendanceService) {
             return ResponseEntity.ok(((DefaultAttendanceService)attendanceService).getTodayAttendance());

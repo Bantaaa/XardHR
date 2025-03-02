@@ -3,6 +3,7 @@ package org.banta.xardhr.service.expense.impl;
 import lombok.RequiredArgsConstructor;
 import org.banta.xardhr.domain.entity.AppUser;
 import org.banta.xardhr.domain.entity.ExpenseRequest;
+import org.banta.xardhr.domain.enums.ExpenseType;
 import org.banta.xardhr.domain.enums.RequestStatus;
 import org.banta.xardhr.dto.request.ExpenseRequestDto;
 import org.banta.xardhr.repository.ExpenseRequestRepository;
@@ -32,13 +33,13 @@ public class DefaultExpenseService implements ExpenseService {
         ExpenseRequest expenseRequest = new ExpenseRequest();
         expenseRequest.setAppUser(user);
         expenseRequest.setAmount(requestDto.getAmount());
-        expenseRequest.setType(requestDto.getType());
+        expenseRequest.setType(ExpenseType.valueOf(requestDto.getType())); // Parse string to enum
         expenseRequest.setDescription(requestDto.getDescription());
         expenseRequest.setStatus(RequestStatus.PENDING);
         expenseRequest.setSubmitDate(LocalDate.now());
 
         ExpenseRequest saved = expenseRequestRepository.save(expenseRequest);
-        return enhanceExpenseDto(convertToDto(saved));
+        return convertToDto(saved);
     }
 
     @Override
@@ -72,18 +73,25 @@ public class DefaultExpenseService implements ExpenseService {
                 .collect(Collectors.toList());
     }
 
-    // Convert entity to basic DTO
+
     private ExpenseRequestDto convertToDto(ExpenseRequest expenseRequest) {
         ExpenseRequestDto dto = new ExpenseRequestDto();
         dto.setId(expenseRequest.getId().toString());
         dto.setAmount(expenseRequest.getAmount());
-        dto.setType(expenseRequest.getType());
+        dto.setType(expenseRequest.getType().toString());
         dto.setDescription(expenseRequest.getDescription());
-        dto.setStatus(expenseRequest.getStatus());
+        dto.setStatus(expenseRequest.getStatus().toString());
 
-        // Add submit date and handle date formatting
+        // Handle the date fields correctly
         if (expenseRequest.getSubmitDate() != null) {
-            dto.setSubmitDate(expenseRequest.getSubmitDate());
+            dto.setSubmittedDate(expenseRequest.getSubmitDate().format(dateFormatter));
+        } else {
+            dto.setSubmittedDate(LocalDate.now().format(dateFormatter));
+        }
+
+        // Add approved date if status is approved
+        if (expenseRequest.getStatus() == RequestStatus.APPROVED) {
+            dto.setApprovedDate(LocalDate.now().format(dateFormatter));
         }
 
         AppUser user = expenseRequest.getAppUser();
@@ -93,15 +101,12 @@ public class DefaultExpenseService implements ExpenseService {
         return dto;
     }
 
-    // Enhance DTO with additional fields needed by frontend
+    // Remove the enhanceExpenseDto method that's causing conflicts, or modify it:
     private ExpenseRequestDto enhanceExpenseDto(ExpenseRequestDto dto) {
-        // Format dates to match frontend expectations
-        if (dto.getSubmitDate() == null && dto.getSubmittedDate() == null) {
-            dto.setSubmittedDate(LocalDate.now().format(dateFormatter));
-        } else if (dto.getSubmitDate() != null) {
-            dto.setSubmittedDate(dto.getSubmitDate().format(dateFormatter));
+        // Add approved date if not present and status is approved
+        if (dto.getApprovedDate() == null && "APPROVED".equals(dto.getStatus())) {
+            dto.setApprovedDate(LocalDate.now().format(dateFormatter));
         }
-
         return dto;
     }
 }

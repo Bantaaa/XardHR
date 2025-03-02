@@ -11,11 +11,11 @@ public class LeaveRequestDto {
     private String id;
     private String employeeId;
     private String employeeName;
-    private LeaveType type;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private RequestStatus status;
+    private String type; // Change from enum to String
+    private String startDate; // Change from LocalDate to String
+    private String endDate; // Change from LocalDate to String
+    private String status; // Change from enum to String
     private String reason;
-    private String appliedOn;
+    private String appliedOn; // This is already in the existing DTO
     private Integer totalDays;
 }

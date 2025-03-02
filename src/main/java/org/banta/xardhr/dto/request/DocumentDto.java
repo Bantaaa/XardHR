@@ -9,12 +9,12 @@ import java.time.LocalDate;
 public class DocumentDto {
     private String id;
     private String title;
-    private DocumentType type;
+    private String type; // Change from enum to String
     private String employeeId;
     private String employeeName;
-    private LocalDate uploadDate;
+    private String uploadDate; // Change from LocalDate to String
     private String fileUrl;
     private String fileSize;
     private Boolean isVerified;
-    private LocalDate expiryDate;
+    private String expiryDate; // Change from LocalDate to String
 }

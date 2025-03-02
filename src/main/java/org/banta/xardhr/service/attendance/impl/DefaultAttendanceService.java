@@ -112,17 +112,17 @@ public class DefaultAttendanceService implements AttendanceService {
                 .collect(Collectors.toList());
     }
 
-    // Convert entity to DTO
-    private AttendanceDto convertToDto(Attendance attendance) {
+    @Override
+    public AttendanceDto convertToDto(Attendance attendance) {
         AttendanceDto dto = new AttendanceDto();
         dto.setId(attendance.getId().toString());
         dto.setEmployeeId(attendance.getEmployee().getEmployeeId().toString());
         dto.setEmployeeName(attendance.getEmployee().getFirstName() + " " +
                 attendance.getEmployee().getLastName());
         dto.setDate(attendance.getDate().toString());
-        dto.setCheckIn(attendance.getCheckIn());
-        dto.setCheckOut(attendance.getCheckOut());
-        dto.setStatus(attendance.getStatus());
+        dto.setCheckIn(attendance.getCheckIn() != null ? attendance.getCheckIn().toString() : null);
+        dto.setCheckOut(attendance.getCheckOut() != null ? attendance.getCheckOut().toString() : null);
+        dto.setStatus(attendance.getStatus() != null ? attendance.getStatus().toString() : null);
 
         // Calculate total hours if check-out is recorded
         if (attendance.getCheckIn() != null && attendance.getCheckOut() != null) {

@@ -51,7 +51,6 @@ public class AuthenticationService {
                 .token(token)
                 .username(savedAppUser.getUsername())
                 .role(savedAppUser.getRole())
-                // Add additional fields expected by frontend
                 .id(savedAppUser.getId().toString())
                 .firstName(savedAppUser.getFirstName())
                 .lastName(savedAppUser.getLastName())

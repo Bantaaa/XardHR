@@ -59,6 +59,9 @@ public class DefaultAppUserService implements AppUserService {
         return convertToDto(savedUser);
     }
 
+
+
+
     @Override
     public AppUserDto updateEmployee(Long id, RegisterRequest request) {
         AppUser user = userRepository.findById(id)
@@ -122,25 +125,34 @@ public class DefaultAppUserService implements AppUserService {
 
     private AppUserDto convertToDto(AppUser user) {
         AppUserDto dto = new AppUserDto();
-        dto.setId(user.getId()); // Add ID for frontend
+        dto.setId(user.getId().toString());
         dto.setUsername(user.getUsername());
         dto.setRole(user.getRole());
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
-        dto.setGender(user.getGender());
-        dto.setEmployeeId(user.getEmployeeId());
-        dto.setStatus(user.getStatus());
-        dto.setJoiningDate(user.getJoiningDate());
+        dto.setGender(user.getGender() != null ? user.getGender().toString() : null);
+        dto.setEmployeeId(user.getEmployeeId().toString());
+        dto.setStatus(user.getStatus().toString());
+        dto.setJoiningDate(user.getJoiningDate() != null ? user.getJoiningDate().toString() : null);
         dto.setBaseSalary(user.getBaseSalary());
         dto.setPosition(user.getPosition());
         dto.setContactNumber(user.getContactNumber());
         dto.setEmail(user.getUsername()); // Set email same as username for frontend
 
         if (user.getDepartment() != null) {
-            dto.setDepartmentId(user.getDepartment().getId());
-            dto.setDepartment(user.getDepartment().getName()); // Include department name
+            dto.setDepartmentId(user.getDepartment().getId().toString());
+            dto.setDepartment(user.getDepartment().getName());
         }
 
         return dto;
+    }
+
+    @Override
+    public void updatePassword(Long id, String password, boolean resetPasswordRequired) {
+        AppUser user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        user.setPassword(passwordEncoder.encode(password));
+        // Additional logic for resetPasswordRequired if needed
+        userRepository.save(user);
     }
 }

@@ -116,7 +116,6 @@ public class DefaultDepartmentService implements DepartmentService {
                 .collect(Collectors.toList());
     }
 
-    // Convert entity to basic DTO
     private DepartmentDto convertToDto(Department department) {
         DepartmentDto dto = new DepartmentDto();
         dto.setId(department.getId().toString());
@@ -125,7 +124,6 @@ public class DefaultDepartmentService implements DepartmentService {
 
         if (department.getDepartmentHead() != null) {
             dto.setHeadId(department.getDepartmentHead().getId().toString());
-
             AppUser head = department.getDepartmentHead();
             dto.setHead(head.getFirstName() + " " + head.getLastName());
         }
@@ -135,6 +133,13 @@ public class DefaultDepartmentService implements DepartmentService {
         }
 
         return dto;
+    }
+
+    // Add specific GET by ID method
+    public DepartmentDto getDepartment(Long id) {
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+        return enhanceDepartmentDto(convertToDto(department));
     }
 
     // Enhance DTO with additional fields needed by frontend
