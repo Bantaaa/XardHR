@@ -9,12 +9,17 @@ import org.banta.xardhr.web.errors.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -25,94 +30,49 @@ public class GlobalExceptionHandler {
         private HttpStatus status;
         private LocalDateTime timestamp;
         private String message;
+        private String path;
+        private String error;
     }
-
-    @ExceptionHandler(JwtException.class)
-    protected ResponseEntity<ErrorResponse> handleJwtException(JwtException ex) {
-        return buildResponseEntity(
-                ErrorResponse.builder()
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .message(ex.getMessage())
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
-    }
-
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    protected ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
-        return buildResponseEntity(
-                ErrorResponse.builder()
-                        .status(HttpStatus.NOT_FOUND)
-                        .message(ex.getMessage())
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
+    public ResponseEntity<Map<String, String>> handleResourceNotFound(ResourceNotFoundException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(BadRequestException.class)
-    protected ResponseEntity<ErrorResponse> handleBadRequest(BadRequestException ex) {
-        return buildResponseEntity(
-                ErrorResponse.builder()
-                        .status(HttpStatus.BAD_REQUEST)
-                        .message(ex.getMessage())
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
+    public ResponseEntity<Map<String, String>> handleBadRequest(BadRequestException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        String message = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-                .reduce((m1, m2) -> m1 + "; " + m2)
-                .orElse("Validation failed");
-        return buildResponseEntity(
-                ErrorResponse.builder()
-                        .status(HttpStatus.BAD_REQUEST)
-                        .message(message)
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<Map<String, String>> handleJwtException(JwtException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    protected ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
-        return buildResponseEntity(
-                ErrorResponse.builder()
-                        .status(HttpStatus.BAD_REQUEST)
-                        .message(ex.getMessage())
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, String>> handleAuthenticationException(AuthenticationException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Authentication failed");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    protected ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
-        return buildResponseEntity(
-                ErrorResponse.builder()
-                        .status(HttpStatus.BAD_REQUEST)
-                        .message("Malformed JSON request")
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "You don't have permission to access this resource");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex, WebRequest request) {
-        return buildResponseEntity(
-                ErrorResponse.builder()
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .message("An unexpected error occurred")
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
-    }
-
-    private ResponseEntity<ErrorResponse> buildResponseEntity(ErrorResponse errorResponse) {
-        return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
+    public ResponseEntity<Map<String, String>> handleAllExceptions(Exception ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "An unexpected error occurred");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }

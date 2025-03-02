@@ -7,16 +7,19 @@ import java.util.UUID;
 
 @Data
 public class AppUserDto {
+    private String id; // Change from Long to String
     private String username;
     private UserRole role;
     private String firstName;
     private String lastName;
-    private Gender gender;
-    private UUID employeeId;
-    private EmployeeStatus status;
-    private LocalDate joiningDate;
+    private String gender; // Change from enum to String
+    private String employeeId; // Change from UUID to String
+    private String status; // Change from enum to String
+    private String joiningDate; // Change from LocalDate to String
     private Double baseSalary;
     private String position;
     private String contactNumber;
-    private Long departmentId;
+    private String departmentId; // Change from Long to String
+    private String department;
+    private String email; // Add email field (same as username)
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.banta.xardhr.domain.enums.RequestStatus;
 import org.banta.xardhr.dto.request.ExpenseRequestDto;
 import org.banta.xardhr.service.expense.ExpenseService;
+import org.banta.xardhr.service.expense.impl.DefaultExpenseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class ExpenseController {
     private final ExpenseService expenseService;
 
     @PostMapping("/request")
-    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DEPT_HEAD')")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DEPT_HEAD', 'HR_MANAGER', 'ADMIN')")
     public ResponseEntity<ExpenseRequestDto> submitRequest(
             @RequestParam Long userId,
             @RequestBody ExpenseRequestDto request) {
@@ -36,5 +37,11 @@ public class ExpenseController {
     @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN') or @securityService.isCurrentUser(#userId)")
     public ResponseEntity<List<ExpenseRequestDto>> getUserRequests(@PathVariable Long userId) {
         return ResponseEntity.ok(expenseService.getUserRequests(userId));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN')")
+    public ResponseEntity<List<ExpenseRequestDto>> getAllExpenses() {
+        return ResponseEntity.ok(((DefaultExpenseService)expenseService).getAllExpenses());
     }
 }

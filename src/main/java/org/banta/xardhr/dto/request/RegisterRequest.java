@@ -10,7 +10,6 @@ public class RegisterRequest {
     @NotBlank(message = "Username is required")
     private String username;
 
-    @NotBlank(message = "Password is required")
     private String password;
 
     @NotBlank(message = "First name is required")
@@ -23,4 +22,6 @@ public class RegisterRequest {
     private String contactNumber;
 
     private String position;
+
+    private Long departmentId; // Added to support department assignment
 }

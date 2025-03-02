@@ -12,9 +12,18 @@ spring:
     hibernate:
       ddl-auto: none  # We use 'none' because we're using Liquibase
     show-sql: true    # Helpful for development to see SQL queries
+    properties:
+      hibernate:
+        format_sql: true
 
   liquibase:  # Required for Liquibase to work
     change-log: db/changelog/master.yaml
+
+  # Enable debug logging for Spring Security
+  logging:
+    level:
+      org.springframework.security: DEBUG
+      org.banta.xardhr: DEBUG
 
 jwt:
   secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
