@@ -33,3 +33,4 @@ build/
 .vscode/
 postgresql.yml
 /document-uploads
+src/main/resources/application.yaml

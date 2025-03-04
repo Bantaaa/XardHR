@@ -19,4 +19,5 @@ public class AuthResponse {
     private String contactNumber;
     private String status;
     private String departmentId;
+    private Boolean passwordResetRequired;
 }
