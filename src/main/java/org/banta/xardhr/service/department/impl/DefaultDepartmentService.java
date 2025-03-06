@@ -28,7 +28,7 @@ public class DefaultDepartmentService implements DepartmentService {
         department.setName(departmentDto.getName());
         department.setDescription(departmentDto.getDescription());
 
-        // Set department head if specified
+        // Set department head
         if (departmentDto.getHeadId() != null) {
             AppUser head = userRepository.findById(Long.valueOf(departmentDto.getHeadId()))
                     .orElseThrow(() -> new ResourceNotFoundException("Department head not found"));

@@ -44,4 +44,11 @@ public class ExpenseController {
     public ResponseEntity<List<ExpenseRequestDto>> getAllExpenses() {
         return ResponseEntity.ok(((DefaultExpenseService)expenseService).getAllExpenses());
     }
+
+    @DeleteMapping("/request/{id}")
+    @PreAuthorize("@securityService.isExpenseRequestOwner(#id)")
+    public ResponseEntity<Void> deleteExpenseRequest(@PathVariable Long id) {
+        expenseService.deleteExpenseRequest(id);
+        return ResponseEntity.ok().build();
+    }
 }

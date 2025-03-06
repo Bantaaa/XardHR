@@ -11,4 +11,5 @@ public interface ExpenseService {
     ExpenseRequestDto submitRequest(Long userId, ExpenseRequestDto request);
     ExpenseRequestDto updateRequest(Long id, RequestStatus status);
     List<ExpenseRequestDto> getUserRequests(Long userId);
+    void deleteExpenseRequest(Long id);
 }

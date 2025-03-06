@@ -46,4 +46,11 @@ public class LeaveController {
     public ResponseEntity<List<LeaveRequestDto>> getAllLeaves() {
         return ResponseEntity.ok(((DefaultLeaveService)leaveService).getAllLeaves());
     }
+
+    @DeleteMapping("/request/{id}")
+    @PreAuthorize("@securityService.isLeaveRequestOwner(#id)")
+    public ResponseEntity<Void> cancelLeaveRequest(@PathVariable Long id) {
+        leaveService.cancelLeaveRequest(id);
+        return ResponseEntity.ok().build();
+    }
 }

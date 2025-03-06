@@ -2,6 +2,17 @@ server:
   port: 8081  # Needed to specify which port your app runs on
 
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: banta4code@gmail.com
+    password: alnr rbcs nnjo kmbe
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   servlet:
     multipart:
       enabled: true
@@ -39,3 +50,6 @@ spring:
 jwt:
   secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
   expiration: 86400000
+
+app:
+  frontend-url: http://localhost:5173
