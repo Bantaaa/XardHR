@@ -414,6 +414,30 @@ databaseChangeLog:
                   type: VARCHAR(255)
             tableName: user
   - changeSet:
+      id: 1740998397926-extra-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_passwordresettoken
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: token
+                  type: VARCHAR(255)
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: expiry_date
+                  type: DATETIME
+            tableName: password_reset_token
+  - changeSet:
       id: 1740998397926-19
       author: Youcode
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS

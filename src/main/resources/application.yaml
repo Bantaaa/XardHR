@@ -35,6 +35,8 @@ spring:
 
   liquibase:  # Required for Liquibase to work
     change-log: db/changelog/master.yaml
+    contexts: ${spring.profiles.active:dev} # This will use the active profile, or 'dev' if none is set
+
   # File storage configuration
   file:
     upload-dir: ./document-uploads

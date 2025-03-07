@@ -12,6 +12,6 @@ public interface AppUserService {
     AppUserDto updateEmployee(Long id, RegisterRequest request);
     void deactivateEmployee(Long id);
     AppUserDto getEmployee(Long id);
+    AppUserDto updateEmployeeProfile(Long id, RegisterRequest request);
     Page<AppUserDto> getAllEmployees(Pageable pageable);
-    void updatePassword(Long id, String password, boolean resetPasswordRequired); // Add this
-}
+    void updatePassword(Long id, String currentPassword, String newPassword, boolean resetPasswordRequired);}

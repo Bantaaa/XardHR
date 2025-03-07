@@ -40,6 +40,14 @@ public class EmployeeController {
         return ResponseEntity.ok(appUserService.updateEmployee(id, request));
     }
 
+    @PutMapping("/profile/{id}")
+    @PreAuthorize("@securityService.isCurrentUser(#id)")
+    public ResponseEntity<AppUserDto> updateOwnProfile(
+            @PathVariable Long id,
+            @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(appUserService.updateEmployeeProfile(id, request));
+    }
+
     @PutMapping("/{id}/deactivate")
     @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN')")
     public ResponseEntity<Void> deactivateEmployee(@PathVariable Long id) {

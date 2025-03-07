@@ -161,11 +161,42 @@ public class DefaultAppUserService implements AppUserService {
     }
 
     @Override
-    public void updatePassword(Long id, String password, boolean resetPasswordRequired) {
+    public void updatePassword(Long id, String currentPassword, String newPassword, boolean resetPasswordRequired) {
         AppUser user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        user.setPassword(passwordEncoder.encode(password));
-        user.setPasswordResetRequired(resetPasswordRequired); // Set to false after change
+
+        // Verify current password
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new BadRequestException("Current password is incorrect");
+        }
+
+        // Update to new password
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPasswordResetRequired(resetPasswordRequired);
         userRepository.save(user);
+    }
+
+    @Override
+    public AppUserDto updateEmployeeProfile(Long id, RegisterRequest request) {
+        AppUser user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // Update only allowed fields
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setContactNumber(request.getContactNumber());
+
+        // Update email/username if provided
+        if (request.getUsername() != null && !request.getUsername().isEmpty()
+                && !request.getUsername().equals(user.getUsername())) {
+            // Check if new username is available
+            if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+                throw new BadRequestException("Email address already in use");
+            }
+            user.setUsername(request.getUsername());
+        }
+
+        AppUser updatedUser = userRepository.save(user);
+        return convertToDto(updatedUser);
     }
 }
