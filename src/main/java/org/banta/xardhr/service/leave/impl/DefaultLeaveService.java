@@ -67,6 +67,19 @@ public class DefaultLeaveService implements LeaveService {
 
 
     @Override
+    public void cancelLeaveRequest(Long id) {
+        LeaveRequest leaveRequest = leaveRequestRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Leave request not found with ID: " + id));
+
+        if (leaveRequest.getStatus() != RequestStatus.PENDING) {
+            throw new BadRequestException("Only pending leave requests can be canceled");
+        }
+
+        leaveRequestRepository.delete(leaveRequest);
+    }
+
+
+    @Override
     public LeaveRequestDto updateRequest(Long id, RequestStatus status) {
         LeaveRequest leaveRequest = leaveRequestRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Leave request not found with ID: " + id));

@@ -31,6 +31,9 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private Boolean passwordResetRequired = false;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 

@@ -2,6 +2,23 @@ server:
   port: 8081  # Needed to specify which port your app runs on
 
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: banta4code@gmail.com
+    password: alnr rbcs nnjo kmbe
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 15MB
+      location: ${java.io.tmpdir}
   datasource:  # Required database connection details
     url: jdbc:postgresql:///XardHR
     username: XardHR
@@ -18,13 +35,23 @@ spring:
 
   liquibase:  # Required for Liquibase to work
     change-log: db/changelog/master.yaml
+    contexts: ${spring.profiles.active:dev} # This will use the active profile, or 'dev' if none is set
 
-  # Enable debug logging for Spring Security
+  # File storage configuration
+  file:
+    upload-dir: ./document-uploads
+
+  # Enhanced logging configuration
   logging:
     level:
-      org.springframework.security: DEBUG
-      org.banta.xardhr: DEBUG
+      org.banta.xardhr.service.document: DEBUG
+      org.banta.xardhr.web.rest: DEBUG
+    file:
+      name: logs/xardhr.log
 
 jwt:
   secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
   expiration: 86400000
+
+app:
+  frontend-url: http://localhost:5173
