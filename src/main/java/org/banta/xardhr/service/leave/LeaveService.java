@@ -11,4 +11,5 @@ public interface LeaveService {
     LeaveRequestDto submitRequest(Long userId, LeaveRequestDto request);
     LeaveRequestDto updateRequest(Long id, RequestStatus status);
     List<LeaveRequestDto> getUserRequests(Long userId);
+    void cancelLeaveRequest(Long id);
 }

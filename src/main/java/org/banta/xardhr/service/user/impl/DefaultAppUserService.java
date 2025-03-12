@@ -1,6 +1,7 @@
 package org.banta.xardhr.service.user.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.banta.xardhr.domain.entity.AppUser;
 import org.banta.xardhr.domain.entity.Department;
 import org.banta.xardhr.domain.enums.EmployeeStatus;
@@ -10,6 +11,7 @@ import org.banta.xardhr.dto.response.AppUserDto;
 import org.banta.xardhr.repository.DepartmentRepository;
 import org.banta.xardhr.repository.UserRepository;
 import org.banta.xardhr.service.user.AppUserService;
+import org.banta.xardhr.service.user.PasswordService;
 import org.banta.xardhr.web.errors.exception.BadRequestException;
 import org.banta.xardhr.web.errors.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
@@ -22,11 +24,13 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DefaultAppUserService implements AppUserService {
 
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordService passwordService;
 
     @Override
     public AppUserDto createEmployee(RegisterRequest request) {
@@ -56,6 +60,15 @@ public class DefaultAppUserService implements AppUserService {
         }
 
         AppUser savedUser = userRepository.save(user);
+
+        // Generate a random password and send welcome email
+        try {
+            passwordService.createUserWithRandomPassword(savedUser.getId());
+            log.info("Generated random password and sent welcome email for user: {}", savedUser.getUsername());
+        } catch (Exception e) {
+            log.error("Failed to send welcome email to new user: {}", e.getMessage(), e);
+        }
+
         return convertToDto(savedUser);
     }
 
@@ -148,11 +161,42 @@ public class DefaultAppUserService implements AppUserService {
     }
 
     @Override
-    public void updatePassword(Long id, String password, boolean resetPasswordRequired) {
+    public void updatePassword(Long id, String currentPassword, String newPassword, boolean resetPasswordRequired) {
         AppUser user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        user.setPassword(passwordEncoder.encode(password));
-        // Additional logic for resetPasswordRequired if needed
+
+        // Verify current password
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new BadRequestException("Current password is incorrect");
+        }
+
+        // Update to new password
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPasswordResetRequired(resetPasswordRequired);
         userRepository.save(user);
+    }
+
+    @Override
+    public AppUserDto updateEmployeeProfile(Long id, RegisterRequest request) {
+        AppUser user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // Update only allowed fields
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setContactNumber(request.getContactNumber());
+
+        // Update email/username if provided
+        if (request.getUsername() != null && !request.getUsername().isEmpty()
+                && !request.getUsername().equals(user.getUsername())) {
+            // Check if new username is available
+            if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+                throw new BadRequestException("Email address already in use");
+            }
+            user.setUsername(request.getUsername());
+        }
+
+        AppUser updatedUser = userRepository.save(user);
+        return convertToDto(updatedUser);
     }
 }

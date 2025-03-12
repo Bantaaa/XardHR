@@ -39,12 +39,16 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.disable()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/auth/**",
                                 "/public/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**"
+                                "/api/password/reset-request",
+                                "/api/password/validate-token",
+                                "/api/password/reset",
+                                "/document-uploads/**"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())

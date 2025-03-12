@@ -9,6 +9,7 @@ import org.banta.xardhr.dto.request.ExpenseRequestDto;
 import org.banta.xardhr.repository.ExpenseRequestRepository;
 import org.banta.xardhr.repository.UserRepository;
 import org.banta.xardhr.service.expense.ExpenseService;
+import org.banta.xardhr.web.errors.exception.BadRequestException;
 import org.banta.xardhr.web.errors.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -99,6 +100,18 @@ public class DefaultExpenseService implements ExpenseService {
         dto.setEmployeeName(user.getFirstName() + " " + user.getLastName());
 
         return dto;
+    }
+
+    @Override
+    public void deleteExpenseRequest(Long id) {
+        ExpenseRequest expenseRequest = expenseRequestRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Expense request not found with ID: " + id));
+
+        if (expenseRequest.getStatus() != RequestStatus.PENDING) {
+            throw new BadRequestException("Only pending expense requests can be deleted");
+        }
+
+        expenseRequestRepository.delete(expenseRequest);
     }
 
     // Remove the enhanceExpenseDto method that's causing conflicts, or modify it:

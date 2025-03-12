@@ -1,0 +1,588 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1740998397926-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: attendance_seq
+            startValue: 1
+  - changeSet:
+      id: 1740998397926-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: bank_account_seq
+            startValue: 1
+  - changeSet:
+      id: 1740998397926-3
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: department_seq
+            startValue: 1
+  - changeSet:
+      id: 1740998397926-4
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: document_seq
+            startValue: 1
+  - changeSet:
+      id: 1740998397926-5
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: expense_request_seq
+            startValue: 1
+  - changeSet:
+      id: 1740998397926-6
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: leave_request_seq
+            startValue: 1
+  - changeSet:
+      id: 1740998397926-7
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: payslip_seq
+            startValue: 1
+  - changeSet:
+      id: 1740998397926-8
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: transaction_seq
+            startValue: 1
+  - changeSet:
+      id: 1740998397926-9
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: user_seq
+            startValue: 1
+  - changeSet:
+      id: 1740998397926-10
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_attendance
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: employee_id
+                  type: BIGINT
+              - column:
+                  name: check_in
+                  type: DATETIME
+              - column:
+                  name: check_out
+                  type: DATETIME
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  name: notes
+                  type: VARCHAR(255)
+              - column:
+                  name: location
+                  type: VARCHAR(255)
+              - column:
+                  name: date
+                  type: DATE
+            tableName: attendance
+  - changeSet:
+      id: 1740998397926-11
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_bankaccount
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: app_user_id
+                  type: BIGINT
+              - column:
+                  name: account_number
+                  type: VARCHAR(255)
+              - column:
+                  name: bank_name
+                  type: VARCHAR(255)
+              - column:
+                  name: branch_code
+                  type: VARCHAR(255)
+            tableName: bank_account
+  - changeSet:
+      id: 1740998397926-12
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_department
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: department_head_id
+                  type: BIGINT
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: parent_department_id
+                  type: BIGINT
+            tableName: department
+  - changeSet:
+      id: 1740998397926-13
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_document
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: app_user_id
+                  type: BIGINT
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: type
+                  type: VARCHAR(255)
+              - column:
+                  name: file_url
+                  type: VARCHAR(255)
+              - column:
+                  name: upload_date
+                  type: DATE
+              - column:
+                  name: expiry_date
+                  type: DATE
+              - column:
+                  name: is_verified
+                  type: BOOLEAN
+            tableName: document
+  - changeSet:
+      id: 1740998397926-14
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_expenserequest
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: app_user_id
+                  type: BIGINT
+              - column:
+                  name: amount
+                  type: DOUBLE
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  name: type
+                  type: VARCHAR(255)
+              - column:
+                  name: submit_date
+                  type: DATE
+              - column:
+                  name: receipt_url
+                  type: VARCHAR(255)
+            tableName: expense_request
+  - changeSet:
+      id: 1740998397926-15
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_leaverequest
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: app_user_id
+                  type: BIGINT
+              - column:
+                  name: start_date
+                  type: DATE
+              - column:
+                  name: end_date
+                  type: DATE
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  name: type
+                  type: VARCHAR(255)
+              - column:
+                  name: reason
+                  type: VARCHAR(255)
+              - column:
+                  name: comments
+                  type: VARCHAR(255)
+            tableName: leave_request
+  - changeSet:
+      id: 1740998397926-16
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_payslip
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: app_user_id
+                  type: BIGINT
+              - column:
+                  name: period_start
+                  type: DATE
+              - column:
+                  name: period_end
+                  type: DATE
+              - column:
+                  name: allowances
+                  type: DOUBLE
+              - column:
+                  name: deductions
+                  type: DOUBLE
+              - column:
+                  name: net_salary
+                  type: DOUBLE
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+            tableName: payslip
+  - changeSet:
+      id: 1740998397926-17
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_transaction
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: bank_account_id
+                  type: BIGINT
+              - column:
+                  name: timestamp
+                  type: DATETIME
+              - column:
+                  name: type
+                  type: VARCHAR(255)
+              - column:
+                  name: amount
+                  type: DOUBLE
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+            tableName: transaction
+  - changeSet:
+      id: 1740998397926-18
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_user
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: username
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: password_reset_required
+                  type: BOOLEAN
+              - column:
+                  name: role
+                  type: VARCHAR(255)
+              - column:
+                  name: last_login
+                  type: DATETIME
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+              - column:
+                  name: gender
+                  type: VARCHAR(255)
+              - column:
+                  name: employee_id
+                  type: UUID
+              - column:
+                  name: department_id
+                  type: BIGINT
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  name: joining_date
+                  type: DATE
+              - column:
+                  name: base_salary
+                  type: DOUBLE
+              - column:
+                  name: position
+                  type: VARCHAR(255)
+              - column:
+                  name: contact_number
+                  type: VARCHAR(255)
+            tableName: user
+  - changeSet:
+      id: 1740998397926-extra-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_passwordresettoken
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: token
+                  type: VARCHAR(255)
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: expiry_date
+                  type: DATETIME
+            tableName: password_reset_token
+  - changeSet:
+      id: 1740998397926-19
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: user_id
+            constraintName: uc_passwordresettoken_user
+            tableName: password_reset_token
+  - changeSet:
+      id: 1740998397926-20
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: employee_id
+            constraintName: uc_user_employeeid
+            tableName: user
+  - changeSet:
+      id: 1740998397926-21
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: username
+            constraintName: uc_user_username
+            tableName: user
+  - changeSet:
+      id: 1740998397926-22
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: employee_id
+            baseTableName: attendance
+            constraintName: FK_ATTENDANCE_ON_EMPLOYEE
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1740998397926-23
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: app_user_id
+            baseTableName: bank_account
+            constraintName: FK_BANKACCOUNT_ON_APPUSER
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1740998397926-24
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: department_head_id
+            baseTableName: department
+            constraintName: FK_DEPARTMENT_ON_DEPARTMENTHEAD
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1740998397926-25
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: parent_department_id
+            baseTableName: department
+            constraintName: FK_DEPARTMENT_ON_PARENTDEPARTMENT
+            referencedColumnNames: id
+            referencedTableName: department
+  - changeSet:
+      id: 1740998397926-26
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: app_user_id
+            baseTableName: document
+            constraintName: FK_DOCUMENT_ON_APPUSER
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1740998397926-27
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: app_user_id
+            baseTableName: expense_request
+            constraintName: FK_EXPENSEREQUEST_ON_APPUSER
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1740998397926-28
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: app_user_id
+            baseTableName: leave_request
+            constraintName: FK_LEAVEREQUEST_ON_APPUSER
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1740998397926-29
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: password_reset_token
+            constraintName: FK_PASSWORDRESETTOKEN_ON_USER
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1740998397926-30
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: app_user_id
+            baseTableName: payslip
+            constraintName: FK_PAYSLIP_ON_APPUSER
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1740998397926-31
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: bank_account_id
+            baseTableName: transaction
+            constraintName: FK_TRANSACTION_ON_BANKACCOUNT
+            referencedColumnNames: id
+            referencedTableName: bank_account
+  - changeSet:
+      id: 1740998397926-32
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: department_id
+            baseTableName: user
+            constraintName: FK_USER_ON_DEPARTMENT
+            referencedColumnNames: id
+            referencedTableName: department
+

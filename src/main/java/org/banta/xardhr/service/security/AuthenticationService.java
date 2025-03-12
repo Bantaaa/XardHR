@@ -92,6 +92,8 @@ public class AuthenticationService {
                 .status(appUser.getStatus().toString())
                 .departmentId(appUser.getDepartment() != null ?
                         appUser.getDepartment().getId().toString() : null)
+                // Add password reset required flag
+                .passwordResetRequired(appUser.getPasswordResetRequired())
                 .build();
     }
 }
