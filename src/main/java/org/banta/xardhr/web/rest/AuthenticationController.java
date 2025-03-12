@@ -34,7 +34,7 @@ public class AuthenticationController {
     }
 
     @PutMapping("/{id}/password")
-    @PreAuthorize("hasRole('ADMIN') or @securityService.isCurrentUser(#id)")
+    @PreAuthorize("@securityService.isCurrentUser(#id)")
     public ResponseEntity<Void> updatePassword(
             @PathVariable Long id,
             @RequestBody PasswordUpdateRequest request) {

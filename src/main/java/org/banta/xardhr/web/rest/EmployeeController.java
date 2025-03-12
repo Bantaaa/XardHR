@@ -3,6 +3,7 @@ package org.banta.xardhr.web.rest;
 import lombok.RequiredArgsConstructor;
 import org.banta.xardhr.dto.request.RegisterRequest;
 import org.banta.xardhr.dto.response.AppUserDto;
+import org.banta.xardhr.service.security.SecurityService;
 import org.banta.xardhr.service.user.AppUserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class EmployeeController {
     private final AppUserService appUserService;
+    private final SecurityService securityService;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN')")
@@ -41,7 +43,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/profile/{id}")
-    @PreAuthorize("@securityService.isCurrentUser(#id)")
+    @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN', 'EMPLOYEE') and @securityService.isCurrentUser(#id)")
     public ResponseEntity<AppUserDto> updateOwnProfile(
             @PathVariable Long id,
             @RequestBody RegisterRequest request) {
