@@ -10,10 +10,10 @@ public class AttendanceDto {
     private String id;
     private String employeeId;
     private String employeeName;
-    private String date; // Change from LocalDate to String
-    private String checkIn; // Change from LocalDateTime to String
-    private String checkOut; // Change from LocalDateTime to String
-    private String status; // Change from enum to String
+    private String date;
+    private String checkIn;
+    private String checkOut;
+    private String status;
     private Double totalHours;
     private String location;
 }

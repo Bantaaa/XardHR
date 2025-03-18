@@ -1,4 +1,3 @@
-// In WebConfig.java
 package org.banta.xardhr.config;
 
 import org.springframework.beans.factory.annotation.Value;

@@ -163,11 +163,15 @@ public class DefaultAppUserService implements AppUserService {
     @Override
     public void updatePassword(Long id, String currentPassword, String newPassword, boolean resetPasswordRequired) {
         AppUser user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
 
-        // Verify current password
-        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new BadRequestException("Current password is incorrect");
+        // Skip current password verification if password reset is required
+        // or if currentPassword is null (admin is changing someone else's password)
+        if (currentPassword != null && !user.getPasswordResetRequired()) {
+            // Verify current password only if not in reset mode
+            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+                throw new BadRequestException("Current password is incorrect");
+            }
         }
 
         // Update to new password

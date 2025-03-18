@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class DepartmentDto {
-    private String id; // Change from Long to String
+    private String id;
     private String name;
     private String description;
     private String headId;
